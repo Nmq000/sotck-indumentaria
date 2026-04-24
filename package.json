@@ -1,0 +1,5 @@
+# Copiá este archivo como .env y completá con tus credenciales de Supabase
+# Las encontrás en: Supabase → Settings → API
+
+VITE_SUPABASE_URL=https://TU_PROYECTO.supabase.co
+VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...

@@ -1,0 +1,119 @@
+# Stock Indumentaria
+
+Sistema de gestión de inventario para indumentaria. Web app React + Supabase.
+
+---
+
+## Requisitos
+
+- Node.js 18 o superior → https://nodejs.org
+- Cuenta en Supabase → https://supabase.com (gratis)
+
+---
+
+## Setup paso a paso
+
+### 1. Instalar dependencias
+
+```bash
+npm install
+```
+
+### 2. Configurar Supabase
+
+1. Creá un proyecto nuevo en https://supabase.com
+2. Andá a **SQL Editor** y ejecutá el archivo `supabase_schema.sql` completo
+3. Andá a **Settings → API** y copiá la URL y la anon key
+
+### 3. Configurar variables de entorno
+
+```bash
+cp .env.example .env
+```
+
+Editá el `.env` y pegá tus credenciales:
+
+```
+VITE_SUPABASE_URL=https://tu-proyecto.supabase.co
+VITE_SUPABASE_ANON_KEY=eyJ...
+```
+
+### 4. Crear el primer usuario admin
+
+En Supabase → **Authentication → Users** → "Invite user" o "Add user":
+- Email: tu@email.com
+- Password: la que quieras
+
+Después en **SQL Editor** ejecutá:
+
+```sql
+-- Reemplazá el UUID con el ID del usuario que acabás de crear
+-- Lo encontrás en Authentication → Users
+INSERT INTO user_roles (user_id, role)
+VALUES ('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx', 'admin');
+```
+
+### 5. Correr en desarrollo
+
+```bash
+npm run dev
+```
+
+Abre http://localhost:5173
+
+---
+
+## Usuarios y roles
+
+- **admin** → acceso total: dashboard, inventario, carga, configuración, eliminar
+- **operario** → solo puede cargar stock (/scan)
+
+Para crear un operario: agregá un usuario en Supabase Auth y asignale `role = 'operario'` en la tabla `user_roles`.
+
+---
+
+## Build para producción
+
+```bash
+npm run build
+```
+
+Subir la carpeta `dist/` a Vercel, Netlify, o cualquier hosting estático.
+
+**Deploy rápido en Vercel:**
+1. Subí el proyecto a GitHub
+2. Importalo en https://vercel.com
+3. Agregá las variables de entorno (VITE_SUPABASE_URL y VITE_SUPABASE_ANON_KEY)
+4. Deploy automático
+
+---
+
+## Estructura del proyecto
+
+```
+src/
+├── main.jsx              # Entry point React
+├── App.jsx               # Routing y layout principal
+├── theme.js              # Design tokens (colores, tipografía)
+├── lib/
+│   └── supabase.js       # Cliente Supabase + helpers de BD
+├── contexts/
+│   └── AuthContext.jsx   # Estado global de autenticación
+├── components/
+│   ├── ui.jsx            # Componentes UI reutilizables
+│   ├── Sidebar.jsx       # Barra lateral de navegación
+│   └── QRModal.jsx       # Modal para ver/imprimir QR
+└── views/
+    ├── LoginView.jsx      # Pantalla de login
+    ├── DashboardView.jsx  # Dashboard con métricas y alertas
+    ├── StockView.jsx      # Tabla de inventario con filtros
+    ├── ScanView.jsx       # Formulario de carga de stock
+    └── SettingsView.jsx   # Configuración (solo admin)
+```
+
+---
+
+## Próximas fases
+
+- **Fase 2**: App instalable con Electron (mismo código, sin cambios)
+- **Fase 3**: Modo offline con SQLite + sync automático con Supabase
